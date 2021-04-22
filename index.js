@@ -50,8 +50,20 @@ io.on('connection', (socket) => {
   // socket.broadcast.emit('user connected', {userID: socket.id, username: socket.username});
   socket.to(roomName).emit('user connected', {userID: socket.id, username: socket.username, room: roomName});
 
+  // Starting quiz event
   socket.on('start quiz', (startObj) => {
-    console.log('Startobj: ', startObj);
+    const {msg, status, room, question, questionCount} = startObj;
+    console.log('Starting quiz');
+    // Notify everyone in given room that the quiz has started (except the sender (creator))
+    socket.to(room).emit('quiz started', {msg, status, question, questionCount});
+  });
+
+  // Next question event
+  socket.on('next question', (questionObj) => {
+    const {msg, status, room, question, currentIndex} = questionObj;
+    console.log('Sending next question');
+    // Send the next question to everyone in the room (except the sender (creator))
+    socket.to(room).emit('get next question', {msg, status, question, currentIndex});
   });
   
   // Notify users on disconnection
@@ -62,7 +74,7 @@ io.on('connection', (socket) => {
     if(found !== -1) {
       users.splice(found, 1);
     }
-    console.log('Users after dc: ', users);
+    // console.log('Users after dc: ', users);
   })
 });
 
