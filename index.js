@@ -31,8 +31,22 @@ const rooms = [];
 
 io.on('connection', (socket) => {
   const roomName = socket.handshake.headers.roomid;
-  console.log('Room: ', socket.handshake.headers.roomid);
-  socket.join(roomName);
+  let isCreator = socket.handshake.headers.iscreator;
+
+  // If regular participant, check if given room exists, if it does not, disconnect the user
+  if(isCreator === 'false') {
+    if(!rooms.includes(roomName)) {
+      console.log('Room: ', roomName, 'did not exist');
+      socket.emit('no room', {msg: 'No room exists'});
+      socket.disconnect();
+      return;
+    }
+    socket.join(roomName);
+  } else {
+    console.log('Is creator');
+    socket.join(roomName);
+  }
+
   // Get all connected users
   // for(let [id, socket] of io.of('/').sockets) {
   //   users.push({userID: id, username: socket.username, room: roomName}); // This sets all users room to the current room
@@ -92,7 +106,7 @@ io.on('connection', (socket) => {
 
   // Forwarding scores
   socket.on('show scores', (scoreObj) => {
-    console.log('Recieved: ', scoreObj);
+    // console.log('Recieved: ', scoreObj);
     // Send the scores to everyone besides the creator
     io.to(scoreObj.room).emit('get scores', scoreObj);
   }); 
