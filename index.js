@@ -9,7 +9,7 @@ const io = require('socket.io')(server, {
   }
 });
 
-const PORT = 3200;
+const PORT = process.env.PORT || 3200;
 const roomName = 'theRoom';
 
 app.get('/', (req, res) => {
