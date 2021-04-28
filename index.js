@@ -6,6 +6,9 @@ const siteURL = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' 
 const io = require('socket.io')(server, {
   cors: {
     origin:  siteURL,
+    methods: ["GET", "POST"],
+    allowedHeaders: ["roomid", "iscreator"],
+    credentials: true
   }
 });
 
