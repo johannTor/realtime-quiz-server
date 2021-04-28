@@ -3,7 +3,7 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const cors = require('cors');
-const siteURL = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://dreamy-meninsky-b805ae.netlify.app/';
+const siteURL = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://dreamy-meninsky-b805ae.netlify.app';
 const io = require('socket.io')(server, {
   cors: {
     origin: siteURL,
