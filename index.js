@@ -2,10 +2,11 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
+const cors = require('cors');
 const siteURL = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://dreamy-meninsky-b805ae.netlify.app/';
 const io = require('socket.io')(server, {
   cors: {
-    origin:  siteURL,
+    origin: siteURL,
     methods: ["GET", "POST"],
     allowedHeaders: ["roomid", "iscreator"],
     credentials: true
@@ -14,6 +15,8 @@ const io = require('socket.io')(server, {
 
 const PORT = process.env.PORT || 3200;
 const roomName = 'theRoom';
+
+app.use(cors);
 
 app.get('/', (req, res) => {
   res.send('<p>Server running</p>');
