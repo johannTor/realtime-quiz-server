@@ -16,7 +16,7 @@ const io = require('socket.io')(server, {
 const PORT = process.env.PORT || 3200;
 const roomName = 'theRoom';
 
-app.use(cors);
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.send('<p>Server running</p>');
