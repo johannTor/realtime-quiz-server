@@ -14,7 +14,6 @@ const io = require('socket.io')(server, {
 });
 
 const PORT = process.env.PORT || 3200;
-const roomName = 'theRoom';
 
 app.use(cors());
 
@@ -54,25 +53,16 @@ io.on('connection', (socket) => {
     socket.join(roomName);
   }
 
-  // Get all connected users
-  // for(let [id, socket] of io.of('/').sockets) {
-  //   users.push({userID: id, username: socket.username, room: roomName}); // This sets all users room to the current room
-  // }
+  // Add the current user, and his roomname if it's not already defined
   users.push({userID: socket.id, username: socket.username, room: roomName});
   if(!rooms.includes(roomName)) {
     rooms.push(roomName);
   }
 
-  // TODO: BEFORE EMITING USERS, filter them out from the user array so that only current roomname users are sent out?
-  // Todo: console log users on the frontend
-
   // Send userlist upon a socket connection
   socket.emit("users", getUsersInRoom(users, roomName));
-  // Send userlist to all clients on every connections?
-  // io.emit('users', users);
 
   // Notify existing users
-  // socket.broadcast.emit('user connected', {userID: socket.id, username: socket.username});
   socket.to(roomName).emit('user connected', {userID: socket.id, username: socket.username, room: roomName});
 
   // Starting quiz event
